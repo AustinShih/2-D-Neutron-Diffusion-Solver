@@ -54,9 +54,11 @@ for i = 1:N % index through rows
             if i-j == 0
                 coef_cell{i,j} = rand(N,M); %populate center matrix
             elseif i-j == -1
-                coef_cell{i,j} = ones(N,M); %populate right matrix
+                coef_cell{i,j} = [a_im1j(D(i,j+1),D(i,j+2)) 0 0;0 a_ij(sigma_a(i,j+1),nu,sigma_f(i,j+1),a_im1j, a_ip1j, ... 
+    a_ijm1, a_ijp1) 0;0 0 a_ip1j(D(i+1,j+1),D(i+1,j+2))]; %populate right matrix
             elseif i-j == 1
-                coef_cell{i,j} = magic(N,M); %populate left matrix
+                coef_cell{i,j} = [a_im1j(D(i,j),D(i,j+1)) 0 0;0 a_ij(sigma_a(i,j+1),nu,sigma_f(i,j+1),a_im1j, a_ip1j, ... 
+    a_ijm1, a_ijp1) 0;0 0 a_ip1j(D(i+1,j),D(i+1,j+1)  %populate left matrix
             else
                 coef_cell{i,j} = zeros(N,M);
             end
