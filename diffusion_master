@@ -1,4 +1,5 @@
 function [] = diffusion_master()
+%master function for diffusion solver
 
 %import input file and take user inputted mesh size
 [geometry, mesh_size] = FP_155_import_geo();
