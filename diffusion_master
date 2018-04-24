@@ -1,0 +1,11 @@
+function [] = diffusion_master()
+
+%import input file and take user inputted mesh size
+[geometry, mesh_size] = FP_155_import_geo();
+
+%find macroscopic fission and absorption cross sections and diffusion
+%constant
+[sigma_f, sigma_a, D] = data(geometry);
+
+
+end
