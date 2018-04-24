@@ -9,7 +9,7 @@ function [ coef_matrix ] = FP_155_gen_mat(input_geo)
 
 % Define equations using anonymous functions
 
-a_im1j = @(Dij,Dip1) -(Dij*epsilon + Dijp1)/2;
+a_im1j = @(Dij,Dip1) -(Dij + Dijp1)/2;
     % a_im1j corresponds to coefficient a_i-1,j or in words
         % a with subscripts "i" minus 1, "j"
         % caputres influence of left flux on center cell
