@@ -25,14 +25,15 @@ D = flipud(D);
 for k = 1:N
     for l = 1:N
         if k-l == 0
-            if k == N 
-                mat(k,l) = -D(i,k); % right boundary condition
-            elseif k == 1 
-                mat(k,l) = a_ip1j(i,k,D); % left boundary condition
-            elseif i == 1
-                mat(k,l) = a_ijp1(i,k,D); % bottom boundary condition
-            elseif i == N 
-                 mat(k,l) = D(i,k); % top boundary contion
+            if (k == N && j ~= N)
+                % Right boundary condition
+                mat(k,l) = -(D(k,j+1) + D(k-1,j+1))/2;
+            elseif (k == N && j == N)
+                % Top Right Corner boundary condition
+                mat(k,l) = -(D(k,j-1) + D(k-1,j-1))/2; % top boundary contion
+             elseif (k ~= N && j == N)
+                % Top Boundary Condition
+                mat(k,l) = -(D(k,j-1)+D(k+1,j-1))/2;
             else
                 mat(k,l) = a_ijp1(i,k,D); %column index is advancing
             end
