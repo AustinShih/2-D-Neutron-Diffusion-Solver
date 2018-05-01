@@ -25,12 +25,9 @@ D = flipud(D);
 for k = 1:N
     for l = 1:N
         if k == l
-            if k == 1
-                mat(k,l) = a_ip1j(j,k,D); % left boundary condition
-            elseif k == N
-                mat(k,l) = -D(j,k); % right boundary condition
-            elseif j == 1
-                mat(k,l) = a_ijm1(j,k,D); % bottom boundary condition
+            if k == N
+                % Right boundary condition
+                mat(k,l) = -(D(k,j)+D(k-1,j))/2;
             else
                 mat(k,l) = a_ijm1(j,k,D); %column index is advancing
             end
