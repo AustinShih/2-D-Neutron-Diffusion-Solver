@@ -52,61 +52,64 @@ for k = 1:N % indexes rows
             if ( k == 1 && j ~= 1 && j ~=N )
                 % Left Boundary condition and not corner
                 mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     a_im1j(k,j,D),... left
-                     0,... right 
-                     0,... lower 
-                     0); % top
+                     0,... left
+                     a_ip1j(k,j,D),... right 
+                     a_ijm1(k,j,D),... lower 
+                     a_ijp1(k,j,D)); % top
                  
             elseif (k == N && j ~= 1 && j ~= N) 
                 % Right Boundary condition and not corner
                 mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     a_im1j(k,j,D),... left
-                     a_im1j(k,j,D),... right 
-                     -D(k,j-1),... lower 
-                     -D(k,j)); % top
+                     a_im1j(k,j,D),        ... left
+                     a_im1j(k,j,D),        ... right 
+                     -(D(k,j)+D(k-1,j))/2 ,... lower 
+                     -(D(k,j+1)+D(k-1,j+1))/2); % top
                  
             elseif (j == 1 && k ~= N && k ~= 1 )
                 % Bottom Boundary condition and not corner
                 mat(k,l) =  a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     0,... left
-                     0,... right 
+                     a_im1j(k,j,D),... left
+                     a_ip1j(k,j,D),... right 
                      0,... lower 
                      a_ijp1(k,j,D)); % top
                  
             elseif (j == N && k ~= N && k ~= 1 )
                 % Top Boundary condition and not corner
                  mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     -D(k,j),... left
-                     -D(k+1,j),... right 
+                     -(D(k,j)+D(k,j-1))/2,     ... left
+                     -(D(k+1,j)+D(i+1,j-1))/2, ... right 
                      a_ijm1(k,j,D),... lower 
                      a_ijm1(k,j,D)); % top
                 
             elseif (j == 1 && k == 1)
                 % Bottom left corner
-                % bottom left corner is arbitrary since all flux values
-                %   are 0
-                mat(k,l) = 1;
+                mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
+                     0,     ... left
+                     a_ip1j(k,j,D), ... right 
+                     0,... lower 
+                     a_ijp1(k,j,D)); % top
+                
             elseif (j == 1 && k == N) 
                 % Bottom right corner
                 mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     a_im1j(k,j,D),... left ||| stay 
+                     a_im1j(k,j,D),... left 
                      a_im1j(k,j,D),... right 
                      0,... lower 
-                     -D(k,j+1)); % top
+                     -(D(k,j+1)+D(k-1,j+1))/2); % top
             elseif (j == N && k == 1)
                 % Top left corner
                 mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
                      0,... left
-                     -D(k+1,j),... right 
+                     -(D(k+1,j)+D(k+1,j-1))/2,... right 
                      a_ijm1(k,j,D),... lower 
                      a_ijm1(k,j,D)); % top
             elseif (j == N && k == N)
                 % Top right corner
                 mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
-                     -2*D(k,j-1),...
-                     -2*D(k-1,j),... right 
-                     0,... lower 
-                     0); % top
+                     -(D(k,j)+D(k,j-1))/2,... left
+                     -(D(k,j)+D(k,j-1))/2,... right 
+                     -(D(k,j-1)+D(k-1,j-1))/2,... lower 
+                     -(D(k,j-1)+D(k-1,j-1))/2); % top
             else 
                  mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
                      a_im1j(k,j,D),... left
@@ -123,21 +126,32 @@ for k = 1:N % indexes rows
 %                 mat(k,l) = 1;
 %             elseif j == 1
 %                 mat(k,l) = 1; % bottom boundary conditions
-            if j == N
-                mat(k,l) = -D(k,j-1); % top boundary conditions
+            if (j == N && k ~= N)
+                % top boundary conditions
+                mat(k,l) = -(D(k+1,j) + D(k+1,j-1))/2; 
+            elseif (j == N && k == N)
+                % top right corner condition
+                mat(k,l) = -(D(k-1,j) + D(k-1,j-1))/2;
+            elseif (k == N && j ~= N)
+                % right boundary condition
+                mat(k,l) = -(D(k-1,j) + D(k-1,j+1))/2;
+            elseif (k == N && j == 1)
+                % bottom right corner condition
+                mat(k,l) = -(D(k-1,j) + D(k-1,j+1))/2;
             else
                 mat(k,l) = a_ip1j(k,j,D);
             end
             
         elseif k-l == 1 % left of center values
             
-            
+                
 %             if l == 1   
 %                 mat(k,l) = 1; % left boundary condition
 %             elseif j == 1
 %                 mat(k,l) = 1; % bottom boundary condition
             if j == N 
-                mat(k,l) = a_ijm1(l,j,D); % top boundary condition
+                % general top boundary condition
+                mat(k,l) = -(D(k,j)+D(k,j-1))/2; % top boundary condition
             else
                 mat(k,l) = a_im1j(l,j,D);
             end
