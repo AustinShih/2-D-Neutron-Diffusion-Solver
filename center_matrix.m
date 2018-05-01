@@ -77,7 +77,7 @@ for k = 1:N % indexes rows
                 % Top Boundary condition and not corner
                  mat(k,l) = a_ij( sig_a(k,i), nu , sig_f(k,i) , ... 
                      -(D(k,j)+D(k,j-1))/2,     ... left
-                     -(D(k+1,j)+D(i+1,j-1))/2, ... right 
+                     -(D(k+1,j)+D(k+1,j-1))/2, ... right 
                      a_ijm1(k,j,D),... lower 
                      a_ijm1(k,j,D)); % top
                 
